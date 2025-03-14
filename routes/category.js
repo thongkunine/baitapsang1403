@@ -1,11 +1,13 @@
 var express = require('express');
 var router = express.Router();
-let productSchema = require('../schema/category')
+let categorySchema = require('../schema/category')
 
+/* GET users listing. */
 router.get('/', async function(req, res, next) {
     let category = await categorySchema.find({});
     res.send(category);
 });
+
 router.get('/:id', async function(req, res, next) {
     try {
         let category = await categorySchema.findById(req.params.id);
@@ -20,13 +22,13 @@ router.get('/:id', async function(req, res, next) {
         })
     }
 });
+
 router.post('/', async function(req, res, next) {
     try {
         let body = req.body;
-        let newCategoyry   = categorySchema({
+        let newCategory = categorySchema({
             name:body.name,
             description:body.description
-          
         });
         await newCategory.save()
         res.status(200).send({
@@ -40,6 +42,7 @@ router.post('/', async function(req, res, next) {
         })
     }
 });
+
 router.put('/:id', async function(req, res, next) {
     try {
         let body = req.body;
@@ -50,7 +53,7 @@ router.put('/:id', async function(req, res, next) {
         if(body.description){
             updatedObj.description = body.description
         }
-        let updatedCategory =  await productSchema.findByIdAndUpdate(req.params.id,updatedObj,{new:true})
+        let updatedCategory =  await categorySchema.findByIdAndUpdate(req.params.id,updatedObj,{new:true})
         res.status(200).send({
             success:true,
             data:updatedCategory
@@ -79,3 +82,6 @@ router.delete('/:id', async function(req, res, next) {
         })
     }
 });
+
+
+module.exports = router;
